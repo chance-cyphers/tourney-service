@@ -13,6 +13,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class BracketSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, max_length=200)
+    roundOf16 = serializers.ListField()
 
     def create(self, validated_data):
         return Bracket(validated_data.get('id'), validated_data.get('name'))
