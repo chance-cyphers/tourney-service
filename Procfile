@@ -1,1 +1,1 @@
-web: gunicorn VoteService.wsgi
+web: gunicorn tourneyservice.wsgi
