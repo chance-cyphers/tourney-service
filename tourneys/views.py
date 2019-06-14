@@ -6,7 +6,9 @@ from tourneys.serializers import BracketSerializer
 
 
 @csrf_exempt
-def index(request):
+def example_bracket(request):
     bracket = Bracket(32, "Board Games")
     serializer = BracketSerializer(bracket)
     return JsonResponse(serializer.data, safe=False)
+
+

@@ -3,5 +3,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='tourney'),
+    path('bracket/example', views.example_bracket, name='bracketExample'),
 ]
