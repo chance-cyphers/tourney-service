@@ -17,7 +17,7 @@ class BracketSerializer(serializers.Serializer):
     roundOf8 = serializers.ListField()
     semiFinals = serializers.ListField()
     finals = serializers.ListField()
-    winner = serializers.CharField()
+    winner = serializers.ReadOnlyField()
 
     def create(self, validated_data):
         return Bracket(validated_data.get('id'), validated_data.get('name'))
