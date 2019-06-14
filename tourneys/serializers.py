@@ -14,6 +14,10 @@ class BracketSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, max_length=200)
     roundOf16 = serializers.ListField()
+    roundOf8 = serializers.ListField()
+    semiFinals = serializers.ListField()
+    finals = serializers.ListField()
+    winner = serializers.CharField()
 
     def create(self, validated_data):
         return Bracket(validated_data.get('id'), validated_data.get('name'))
