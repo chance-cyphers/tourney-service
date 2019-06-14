@@ -12,3 +12,9 @@ def example_bracket(request):
     return JsonResponse(serializer.data, safe=False)
 
 
+@csrf_exempt
+def index(request):
+    links = {
+        "currentBracketLink": "https://tourney-service.herokuapp.com/tourney/bracket/example",
+    }
+    return JsonResponse({"links": links, "greeting": "sup"}, safe=False)
