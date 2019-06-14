@@ -23,23 +23,23 @@ class Bracket:
             {"name": "Dominion"},
         ]
         self.roundOf8 = [
-            {"name:": "Pandemic"},
-            {"name:": "Code Names"},
-            {"name:": "Dead of Winter"},
-            {"name:": "Coup"},
-            {"name:": "Munchkin"},
-            {"name:": "Betrayal at House on the Hill"},
-            {"name:": "Photosynthesis"},
-            {"name:": "Dominion"},
+            {"name": "Pandemic"},
+            {"name": "Code Names"},
+            {"name": "Dead of Winter"},
+            {"name": "Coup"},
+            {"name": "Munchkin"},
+            {"name": "Betrayal at House on the Hill"},
+            {"name": "Photosynthesis"},
+            {"name": "Dominion"},
         ]
         self.semiFinals = [
-            {"name:": "Pandemic"},
-            {"name:": "Coup"},
-            {"name:": "Betrayal at House on the Hill"},
-            {"name:": "Dominion"},
+            {"name": "Pandemic"},
+            {"name": "Coup"},
+            {"name": "Betrayal at House on the Hill"},
+            {"name": "Dominion"},
         ]
         self.finals = [
-            {"name:": "Pandemic"},
-            {"name:": "Dominion"},
+            {"name": "Pandemic"},
+            {"name": "Dominion"},
         ]
         self.winner = {"name": "Pandemic"}
