@@ -1,3 +1,6 @@
+from django.db import models
+
+
 class Bracket:
     managed = False
 
@@ -43,3 +46,18 @@ class Bracket:
             {"name": "Dominion"},
         ]
         self.winner = {"name": "Pandemic"}
+
+
+class Tourney(models.Model):
+    title = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.title
+
+
+class Contestant(models.Model):
+    name = models.CharField(max_length=200)
+    tourney = models.ForeignKey(Tourney, on_delete=models.CASCADE, related_name="contestants")
+
+    def __str__(self):
+        return self.name

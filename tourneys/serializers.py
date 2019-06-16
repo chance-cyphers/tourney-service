@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from tourneys.models import Bracket
+from tourneys.models import Bracket, Tourney, Contestant
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,3 +24,17 @@ class BracketSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         pass
+
+
+class ContestantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contestant
+        fields = ('id', 'name')
+
+
+class TourneySerializer(serializers.ModelSerializer):
+    contestants = ContestantSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Tourney
+        fields = ('title', 'contestants')

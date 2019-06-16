@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from tourneys.models import Bracket
-from tourneys.serializers import BracketSerializer
+from tourneys.models import Bracket, Tourney
+from tourneys.serializers import BracketSerializer, TourneySerializer
 
 
 @csrf_exempt
@@ -18,3 +18,9 @@ def index(request):
         "currentBracketLink": "https://tourney-service.herokuapp.com/tourney/bracket/example",
     }
     return JsonResponse({"links": links, "greeting": "sup"}, safe=False)
+
+
+@csrf_exempt
+def tourneys(request):
+    serializer = TourneySerializer(Tourney.objects.all(), many=True)
+    return JsonResponse(serializer.data, safe=False)
