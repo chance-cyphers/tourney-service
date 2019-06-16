@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from tourneys.models import Bracket, Tourney
@@ -22,5 +22,8 @@ def index(request):
 
 @csrf_exempt
 def tourneys(request):
-    serializer = TourneySerializer(Tourney.objects.all(), many=True)
-    return JsonResponse(serializer.data, safe=False)
+    if request.method == "GET":
+        serializer = TourneySerializer(Tourney.objects.all(), many=True)
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return HttpResponse(status=405)
