@@ -37,7 +37,7 @@ class TourneySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tourney
-        fields = ('title', 'contestants')
+        fields = ('id', 'title', 'contestants')
 
     def create(self, validated_data):
         contestant_data = validated_data.pop('contestants')

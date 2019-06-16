@@ -1,6 +1,6 @@
 import io
 
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404, HttpResponseNotAllowed
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
@@ -36,3 +36,15 @@ def tourneys(request):
         return HttpResponse(status=201)
     else:
         return HttpResponse(status=405)
+
+
+@csrf_exempt
+def single_tourney(request, tourney_id):
+    if request.method == "GET":
+        try:
+            serializer = TourneySerializer(Tourney.objects.get(pk=tourney_id))
+            return JsonResponse(serializer.data, safe=False)
+        except Tourney.DoesNotExist:
+            raise Http404("Tourney does not exist")
+    else:
+        return HttpResponseNotAllowed("GET")
