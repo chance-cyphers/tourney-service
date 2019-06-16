@@ -1,5 +1,8 @@
+import io
+
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
 
 from tourneys.models import Bracket, Tourney
 from tourneys.serializers import BracketSerializer, TourneySerializer
@@ -25,5 +28,11 @@ def tourneys(request):
     if request.method == "GET":
         serializer = TourneySerializer(Tourney.objects.all(), many=True)
         return JsonResponse(serializer.data, safe=False)
+    if request.method == "POST":
+        data = JSONParser().parse(io.BytesIO(request.body))
+        serializer = TourneySerializer(data=data)
+        serializer.is_valid()
+        serializer.save()
+        return HttpResponse(status=201)
     else:
         return HttpResponse(status=405)

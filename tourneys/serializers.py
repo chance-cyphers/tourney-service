@@ -33,8 +33,16 @@ class ContestantSerializer(serializers.ModelSerializer):
 
 
 class TourneySerializer(serializers.ModelSerializer):
-    contestants = ContestantSerializer(many=True, read_only=True)
+    contestants = ContestantSerializer(many=True)
 
     class Meta:
         model = Tourney
         fields = ('title', 'contestants')
+
+    def create(self, validated_data):
+        contestant_data = validated_data.pop('contestants')
+        tourney = Tourney.objects.create(**validated_data)
+        for c in contestant_data:
+            Contestant.objects.create(tourney=tourney, **c)
+        return tourney
+
