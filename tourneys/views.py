@@ -35,7 +35,7 @@ def tourney(request):
         serializer.save()
         return HttpResponse(status=201)
     else:
-        return HttpResponseNotAllowed("POST")
+        return HttpResponseNotAllowed("GET, POST")
 
 
 @csrf_exempt
@@ -54,7 +54,12 @@ def single_tourney(request, tourney_id):
 def vote(request, tourney_id, username):
     if request.method == "PUT":
         data = JSONParser().parse(io.BytesIO(request.body))
-        return HttpResponse(content=str(tourney_id) + "//" + str(username) + "//" + str(data))
+        # find the current tourney
+        current_tourney = Tourney.objects.latest('id')
+
+        # find current match - get round contestant id
+        # find the vote with rc_id and username
+        return HttpResponse(content="latest: " + str(current_tourney))
     else:
         return HttpResponseNotAllowed("PUT")
 

@@ -69,7 +69,7 @@ class RoundContestant(models.Model):
     tourney = models.ForeignKey(Tourney, on_delete=models.CASCADE, related_name="round_contestants", null=True)
 
     def __str__(self):
-        return "round " + str(self.round) + ": " + str(self.character)
+        return str(self.id) + ": " + "round " + str(self.round) + " - " + str(self.character)
 
 
 class Vote(models.Model):
@@ -77,4 +77,4 @@ class Vote(models.Model):
     round_contestant = models.ForeignKey(RoundContestant, on_delete=models.CASCADE, related_name="votes")
 
     def __str__(self):
-        return self.username + " " + self.character
+        return self.username + " votes for round contestant " + self.round_contestant
