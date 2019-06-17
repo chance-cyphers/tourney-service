@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from tourneys.models import Bracket, Tourney, Contestant
+from tourneys.models import Bracket, Tourney, Contestant, Character, RoundContestant
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -46,3 +46,19 @@ class TourneySerializer(serializers.ModelSerializer):
             Contestant.objects.create(tourney=tourney, **c)
         return tourney
 
+
+class TourneySerializerV2(serializers.ModelSerializer):
+    contestants = ContestantSerializer(many=True)
+
+    class Meta:
+        model = Tourney
+        fields = ('id', 'title', 'contestants')
+
+    def create(self, validated_data):
+        contestant_data = validated_data.pop('contestants')
+        tourney = Tourney.objects.create(**validated_data)
+        for c in contestant_data:
+            new_character = Character.objects.create(**c)
+            RoundContestant.objects.create(tourney=tourney, character=new_character, round=16)
+
+        return tourney

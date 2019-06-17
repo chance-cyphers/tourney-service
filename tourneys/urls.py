@@ -7,4 +7,5 @@ urlpatterns = [
     path('bracket/example', views.example_bracket, name='bracketExample'),
     path('tourney', views.tourneys),
     path('tourney/<int:tourney_id>/', views.single_tourney),
+    path('v2/tourney', views.tourney_v2),
 ]
