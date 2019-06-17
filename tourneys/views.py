@@ -52,5 +52,9 @@ def single_tourney(request, tourney_id):
 
 @csrf_exempt
 def vote(request, tourney_id, username):
-    data = JSONParser().parse(io.BytesIO(request.body))
-    return HttpResponse(content=str(tourney_id) + "//" + str(username) + "//" + str(data))
+    if request.method == "PUT":
+        data = JSONParser().parse(io.BytesIO(request.body))
+        return HttpResponse(content=str(tourney_id) + "//" + str(username) + "//" + str(data))
+    else:
+        return HttpResponseNotAllowed("PUT")
+
