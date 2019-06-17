@@ -40,8 +40,8 @@ class TourneySerializer(serializers.Serializer):
         character_data = validated_data.pop('characters')
         tourney = Tourney.objects.create(**validated_data)
         for c in character_data:
-            new_character = Character.objects.create(tourney=tourney, **c)
-            RoundContestant.objects.create(character=new_character, round=16)
+            character = Character.objects.create(tourney=tourney, **c)
+            RoundContestant.objects.create(character=character, tourney=tourney, round=16)
 
         return tourney
 
