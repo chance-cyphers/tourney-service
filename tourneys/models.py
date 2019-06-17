@@ -66,7 +66,15 @@ class Character(models.Model):
 class RoundContestant(models.Model):
     round = models.IntegerField()
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
-    votes = models.IntegerField(default=0)
+    tourney = models.ForeignKey(Tourney, on_delete=models.CASCADE, related_name="round_contestants", null=True)
 
     def __str__(self):
         return "round " + str(self.round) + ": " + str(self.character)
+
+
+class Vote(models.Model):
+    username = models.CharField(max_length=200)
+    round_contestant = models.ForeignKey(RoundContestant, on_delete=models.CASCADE, related_name="votes")
+
+    def __str__(self):
+        return self.username + " " + self.character

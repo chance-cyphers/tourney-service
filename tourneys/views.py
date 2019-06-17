@@ -48,3 +48,9 @@ def single_tourney(request, tourney_id):
             raise Http404("Tourney does not exist")
     else:
         return HttpResponseNotAllowed("GET")
+
+
+@csrf_exempt
+def vote(request, tourney_id, username):
+    data = JSONParser().parse(io.BytesIO(request.body))
+    return HttpResponse(content=str(tourney_id) + "//" + str(username) + "//" + str(data))
