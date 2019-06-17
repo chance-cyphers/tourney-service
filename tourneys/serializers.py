@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from tourneys.models import Bracket, Tourney, Contestant, Character, RoundContestant
+from tourneys.models import Bracket, Tourney, Character, RoundContestant
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -26,39 +26,24 @@ class BracketSerializer(serializers.Serializer):
         pass
 
 
-class ContestantSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Contestant
-        fields = ('id', 'name')
+class CharacterSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length=200)
 
 
-class TourneySerializer(serializers.ModelSerializer):
-    contestants = ContestantSerializer(many=True)
-
-    class Meta:
-        model = Tourney
-        fields = ('id', 'title', 'contestants')
+class TourneySerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    title = serializers.CharField(max_length=200)
+    characters = CharacterSerializer(many=True)
 
     def create(self, validated_data):
-        contestant_data = validated_data.pop('contestants')
+        character_data = validated_data.pop('characters')
         tourney = Tourney.objects.create(**validated_data)
-        for c in contestant_data:
-            Contestant.objects.create(tourney=tourney, **c)
+        for c in character_data:
+            new_character = Character.objects.create(tourney=tourney, **c)
+            RoundContestant.objects.create(character=new_character, round=16)
+
         return tourney
 
-
-class TourneySerializerV2(serializers.ModelSerializer):
-    contestants = ContestantSerializer(many=True)
-
-    class Meta:
-        model = Tourney
-        fields = ('id', 'title', 'contestants')
-
-    def create(self, validated_data):
-        contestant_data = validated_data.pop('contestants')
-        tourney = Tourney.objects.create(**validated_data)
-        for c in contestant_data:
-            new_character = Character.objects.create(**c)
-            RoundContestant.objects.create(tourney=tourney, character=new_character, round=16)
-
-        return tourney
+    def update(self, instance, validated_data):
+        pass
