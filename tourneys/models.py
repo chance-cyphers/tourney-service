@@ -72,9 +72,19 @@ class RoundContestant(models.Model):
         return str(self.id) + ": " + "round " + str(self.round) + " - " + str(self.character)
 
 
-class Vote(models.Model):
-    username = models.CharField(max_length=200)
-    round_contestant = models.ForeignKey(RoundContestant, on_delete=models.CASCADE, related_name="votes")
+class Match(models.Model):
+    contestant1 = models.ForeignKey(RoundContestant, on_delete=models.CASCADE, related_name="contestant1")
+    contestant2 = models.ForeignKey(RoundContestant, on_delete=models.CASCADE, related_name="contestant2")
 
     def __str__(self):
-        return self.username + " votes for round contestant " + self.round_contestant
+        return str(self.id) + ": " + str(self.contestant1.character) + " vs " + str(self.contestant2.character)
+
+
+class Vote(models.Model):
+    username = models.CharField(max_length=200)
+    round_contestant = models.ForeignKey(RoundContestant, on_delete=models.CASCADE, related_name="votes", null=True)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return str(self.round_contestant.round) + ": " + str(self.username) + " votes for " \
+               + str(self.round_contestant.character)

@@ -4,7 +4,7 @@ from django.http import JsonResponse, HttpResponse, Http404, HttpResponseNotAllo
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
-from tourneys.models import Bracket, Tourney
+from tourneys.models import Bracket, Tourney, Vote, RoundContestant, Match
 from tourneys.serializers import BracketSerializer, TourneySerializer
 
 
@@ -51,15 +51,11 @@ def single_tourney(request, tourney_id):
 
 
 @csrf_exempt
-def vote(request, tourney_id, username):
+def vote(request, match_id, rc_id, username):
     if request.method == "PUT":
-        data = JSONParser().parse(io.BytesIO(request.body))
-        # find the current tourney
-        current_tourney = Tourney.objects.latest('id')
-
-        # find current match - get round contestant id
-        # find the vote with rc_id and username
-        return HttpResponse(content="latest: " + str(current_tourney))
+        rc = RoundContestant.objects.get(pk=rc_id)
+        match = Match.objects.get(pk=match_id)
+        v = Vote.objects.update_or_create(username=username, match=match, defaults={"round_contestant": rc})
+        return HttpResponse(content=str(v))
     else:
         return HttpResponseNotAllowed("PUT")
-
