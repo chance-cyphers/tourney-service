@@ -6,6 +6,7 @@ from rest_framework.parsers import JSONParser
 
 from tourneys.models import Bracket, Tourney, Vote, RoundContestant, Match
 from tourneys.serializers import BracketSerializer, TourneySerializer
+from datetime import datetime, timedelta, timezone
 
 
 @csrf_exempt
@@ -53,7 +54,17 @@ def single_tourney(request, tourney_id):
 @csrf_exempt
 def current_match(request, tourney_id):
     if request.method == "GET":
-        return JsonResponse(tourney_id, safe=False)
+        # find tourney
+        tourney = Tourney.objects.get(pk=tourney_id)
+
+        # calc match seq # by tourney time
+        seconds_elapsed = (datetime.now(timezone.utc) - tourney.start_time).total_seconds()
+        match_number = seconds_elapsed // (tourney.match_duration * 60) + 1
+
+        # get_or_create match with seq#
+        # check <= 8
+
+        return JsonResponse(str(seconds_elapsed/60) + ", " + str(match_number), safe=False)
     else:
         return HttpResponseNotAllowed("GET")
 

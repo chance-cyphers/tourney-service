@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 
 class Bracket:
@@ -50,9 +51,11 @@ class Bracket:
 
 class Tourney(models.Model):
     title = models.CharField(max_length=200)
+    match_duration = models.IntegerField(default=15)
+    start_time = models.DateTimeField(default=datetime.now)
 
     def __str__(self):
-        return self.title
+        return str(self.id) + ": " + str(self.title)
 
 
 class Character(models.Model):
@@ -75,6 +78,7 @@ class RoundContestant(models.Model):
 class Match(models.Model):
     contestant1 = models.ForeignKey(RoundContestant, on_delete=models.CASCADE, related_name="contestant1")
     contestant2 = models.ForeignKey(RoundContestant, on_delete=models.CASCADE, related_name="contestant2")
+    sequence = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.id) + ": " + str(self.contestant1.character) + " vs " + str(self.contestant2.character)
