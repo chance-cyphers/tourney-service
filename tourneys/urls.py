@@ -8,4 +8,5 @@ urlpatterns = [
     path('tourney/<int:tourney_id>', views.single_tourney),
     path('tourney', views.tourney),
     path('match/<int:match_id>/round-contestant/<int:rc_id>/user/<username>/vote', views.vote),
+    path('tourney/<int:tourney_id>/current-match', views.current_match),
 ]

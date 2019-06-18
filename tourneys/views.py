@@ -51,6 +51,14 @@ def single_tourney(request, tourney_id):
 
 
 @csrf_exempt
+def current_match(request, tourney_id):
+    if request.method == "GET":
+        return JsonResponse(tourney_id, safe=False)
+    else:
+        return HttpResponseNotAllowed("GET")
+
+
+@csrf_exempt
 def vote(request, match_id, rc_id, username):
     if request.method == "PUT":
         rc = RoundContestant.objects.get(pk=rc_id)
