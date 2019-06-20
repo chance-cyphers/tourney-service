@@ -66,19 +66,15 @@ class Character(models.Model):
         return self.name
 
 
-class RoundContestant(models.Model):
-    round = models.IntegerField()
-    character = models.ForeignKey(Character, on_delete=models.CASCADE)
-    tourney = models.ForeignKey(Tourney, on_delete=models.CASCADE, related_name="round_contestants", null=True)
-
-    def __str__(self):
-        return str(self.id) + ": " + "round " + str(self.round) + " - " + str(self.character)
-
-
 class Match(models.Model):
-    contestant1 = models.ForeignKey(RoundContestant, on_delete=models.CASCADE, related_name="contestant1")
-    contestant2 = models.ForeignKey(RoundContestant, on_delete=models.CASCADE, related_name="contestant2")
+    tourney = models.ForeignKey(Tourney, on_delete=models.CASCADE, null=True)
     sequence = models.IntegerField(default=0)
+    character1 = models.ForeignKey(Character, on_delete=models.CASCADE, related_name="character1", null=True)
+    character2 = models.ForeignKey(Character, on_delete=models.CASCADE, related_name="character2", null=True)
+    winner = models.ForeignKey(Character, on_delete=models.CASCADE, null=True)
+    mom = models.ForeignKey("self", on_delete=models.CASCADE, null=True, related_name="child1")
+    dad = models.ForeignKey("self", on_delete=models.CASCADE, null=True, related_name="child2")
+    round = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.id) + ": " + str(self.contestant1.character) + " vs " + str(self.contestant2.character)
@@ -86,9 +82,9 @@ class Match(models.Model):
 
 class Vote(models.Model):
     username = models.CharField(max_length=200)
-    round_contestant = models.ForeignKey(RoundContestant, on_delete=models.CASCADE, related_name="votes", null=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE, null=True)
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return str(self.round_contestant.round) + ": " + str(self.username) + " votes for " \
-               + str(self.round_contestant.character)
+        return str(self.username) + " votes for " \
+               + str(self.character)

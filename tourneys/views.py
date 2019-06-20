@@ -4,7 +4,7 @@ from django.http import JsonResponse, HttpResponse, Http404, HttpResponseNotAllo
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
-from tourneys.models import Bracket, Tourney, Vote, RoundContestant, Match
+from tourneys.models import Bracket, Tourney, Vote, Match
 from tourneys.serializers import BracketSerializer, TourneySerializer
 from datetime import datetime, timedelta, timezone
 
@@ -61,20 +61,28 @@ def current_match(request, tourney_id):
         seconds_elapsed = (datetime.now(timezone.utc) - tourney.start_time).total_seconds()
         match_number = seconds_elapsed // (tourney.match_duration * 60) + 1
 
-        # get_or_create match with seq#
-        # check <= 8
+        # get all matches <= seq
+        past_matches = Match.objects.filter(
+            tourney=tourney
+        ).filter(
+            sequence__lt=3
+        )
 
-        return JsonResponse(str(seconds_elapsed/60) + ", " + str(match_number), safe=False)
+        # update winners if null
+
+        # update current match chars if needed
+
+        return JsonResponse("matches: " + str(past_matches), safe=False)
     else:
         return HttpResponseNotAllowed("GET")
 
 
 @csrf_exempt
 def vote(request, match_id, rc_id, username):
-    if request.method == "PUT":
-        rc = RoundContestant.objects.get(pk=rc_id)
-        match = Match.objects.get(pk=match_id)
-        v = Vote.objects.update_or_create(username=username, match=match, defaults={"round_contestant": rc})
-        return HttpResponse(content=str(v))
-    else:
+    # if request.method == "PUT":
+    #     rc = RoundContestant.objects.get(pk=rc_id)
+    #     match = Match.objects.get(pk=match_id)
+    #     v = Vote.objects.update_or_create(username=username, match=match, defaults={"round_contestant": rc})
+    #     return HttpResponse(content=str(v))
+    # else:
         return HttpResponseNotAllowed("PUT")
