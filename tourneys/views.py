@@ -62,14 +62,12 @@ def current_match(request, tourney_id):
         seconds_elapsed = (datetime.now(timezone.utc) - tourney.start_time).total_seconds()
         match_number = seconds_elapsed // (tourney.match_duration * 60) + 1
 
-        # get all matches <= seq
+        # update past winners
         past_matches = Match.objects.filter(
             tourney=tourney
         ).filter(
             sequence__lt=match_number
         )
-
-        # update winners if null
         for m in past_matches:
             if m.winner is None:
                 char1_vote_count = len(m.votes.filter(character=m.character1))
@@ -79,6 +77,11 @@ def current_match(request, tourney_id):
                 m.save()
 
         # update current match chars if needed
+        current_match = Match.objects.get(tourney=tourney, sequence=match_number)
+        if current_match.character1 is None:
+            current_match.character1 = current_match.mom.winner
+            current_match.character2 = current_match.dad.winner
+            current_match.save()
 
         return JsonResponse("matches: " + str(match_number), safe=False)
     else:
