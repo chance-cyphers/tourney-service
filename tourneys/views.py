@@ -25,7 +25,7 @@ def index(request):
 
 
 @csrf_exempt
-def tourney(request):
+def tourneys(request):
     if request.method == "GET":
         serializer = TourneySerializer(Tourney.objects.all(), many=True)
         return JsonResponse(serializer.data, safe=False)
@@ -33,8 +33,8 @@ def tourney(request):
         data = JSONParser().parse(io.BytesIO(request.body))
         serializer = TourneySerializer(data=data)
         serializer.is_valid()
-        serializer.save()
-        return HttpResponse(status=201)
+        save = serializer.save()
+        return HttpResponse(status=201, content=str(save))
     else:
         return HttpResponseNotAllowed("GET, POST")
 
@@ -65,20 +65,27 @@ def current_match(request, tourney_id):
         past_matches = Match.objects.filter(
             tourney=tourney
         ).filter(
-            sequence__lt=3
+            sequence__lt=match_number
         )
 
         # update winners if null
+        for m in past_matches:
+            if m.winner is None:
+                print('match: ' + str(m.sequence))
+                char1_votes = m.votes.filter(character=m.character1)
+                char2_votes = m.votes.filter(character=m.character2)
+                print(len(char1_votes))
+                print(len(char2_votes))
 
         # update current match chars if needed
 
-        return JsonResponse("matches: " + str(past_matches), safe=False)
+        return JsonResponse("matches: " + str(match_number), safe=False)
     else:
         return HttpResponseNotAllowed("GET")
 
 
 @csrf_exempt
-def vote(request, match_id, rc_id, username):
+def vote(request, match_id, username):
     # if request.method == "PUT":
     #     rc = RoundContestant.objects.get(pk=rc_id)
     #     match = Match.objects.get(pk=match_id)

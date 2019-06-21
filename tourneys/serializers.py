@@ -48,17 +48,15 @@ class TourneySerializer(serializers.Serializer):
             Match.objects.create(
                 tourney=tourney,
                 sequence=i + 1,
-                character1=characters[i*2],
-                character2=characters[i*2 + 1],
+                character1=characters[i * 2],
+                character2=characters[i * 2 + 1],
                 round=16,
             )
 
         for i in range(8, 15):
             mom_seq = 15 - (15 - i) * 2
-            print("i: " + str(i))
-            print("mom: " + str(mom_seq))
             mom = Match.objects.get(tourney=tourney, sequence=mom_seq)
-            dad = Match.objects.get(tourney=tourney, sequence=(15 - (15-i)*2 + 1))
+            dad = Match.objects.get(tourney=tourney, sequence=mom_seq + 1)
             Match.objects.create(
                 tourney=tourney,
                 sequence=i + 1,

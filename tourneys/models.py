@@ -82,7 +82,7 @@ class Match(models.Model):
 
 class Vote(models.Model):
     username = models.CharField(max_length=200)
-    match = models.ForeignKey(Match, on_delete=models.CASCADE, null=True)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, null=True, related_name="votes")
     character = models.ForeignKey(Character, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
