@@ -1,12 +1,14 @@
 import io
+import json
+
+from datetime import datetime, timezone
 
 from django.http import JsonResponse, HttpResponse, Http404, HttpResponseNotAllowed
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
-from tourneys.models import Bracket, Tourney, Vote, Match
+from tourneys.models import Bracket, Tourney, Match, Vote, Character
 from tourneys.serializers import BracketSerializer, TourneySerializer
-from datetime import datetime, timedelta, timezone
 
 
 @csrf_exempt
@@ -85,11 +87,12 @@ def current_match(request, tourney_id):
 
 
 @csrf_exempt
-def vote(request, match_id, username):
-    # if request.method == "PUT":
-    #     rc = RoundContestant.objects.get(pk=rc_id)
-    #     match = Match.objects.get(pk=match_id)
-    #     v = Vote.objects.update_or_create(username=username, match=match, defaults={"round_contestant": rc})
-    #     return HttpResponse(content=str(v))
-    # else:
+def vote(request, match_id, character_id, username):
+    if request.method == "PUT":
+        # data = JSONParser().parse(io.BytesIO(request.body))
+        match = Match.objects.get(pk=match_id)
+        character = Character.objects.get(pk=character_id)
+        v = Vote.objects.update_or_create(username=username, match=match, defaults={"character": character})
+        return HttpResponse(content=str(v))
+    else:
         return HttpResponseNotAllowed("PUT")

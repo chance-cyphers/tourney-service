@@ -63,7 +63,7 @@ class Character(models.Model):
     tourney = models.ForeignKey(Tourney, on_delete=models.CASCADE, related_name="characters")
 
     def __str__(self):
-        return self.name
+        return str(self.id) + ": " + str(self.name)
 
 
 class Match(models.Model):
@@ -77,7 +77,7 @@ class Match(models.Model):
     round = models.IntegerField(default=0)
 
     def __str__(self):
-        return str(self.sequence) + ": " + str(self.character1) + " vs " + str(self.character2)
+        return str(self.id) + ": " + str(self.character1) + " vs " + str(self.character2)
 
 
 class Vote(models.Model):
@@ -87,4 +87,4 @@ class Vote(models.Model):
 
     def __str__(self):
         return str(self.username) + " votes for " \
-               + str(self.character)
+               + str(self.character.name)
