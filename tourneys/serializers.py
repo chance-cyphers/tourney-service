@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from tourneys.models import Bracket, Tourney, Character
+from tourneys.models import Bracket, Tourney, Character, Match
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -37,11 +37,35 @@ class TourneySerializer(serializers.Serializer):
     characters = CharacterSerializer(many=True)
 
     def create(self, validated_data):
-        # character_data = validated_data.pop('characters')
+        character_data = validated_data.pop('characters')
         tourney = Tourney.objects.create(**validated_data)
-        # for c in character_data:
-            # character = Character.objects.create(tourney=tourney, **c)
-            # RoundContestant.objects.create(character=character, tourney=tourney, round=16)
+
+        for c in character_data:
+            Character.objects.create(tourney=tourney, **c)
+
+        characters = Character.objects.filter(tourney=tourney)
+        for i in range(0, 8):
+            Match.objects.create(
+                tourney=tourney,
+                sequence=i + 1,
+                character1=characters[i*2],
+                character2=characters[i*2 + 1],
+                round=16,
+            )
+
+        for i in range(8, 15):
+            mom_seq = 15 - (15 - i) * 2
+            print("i: " + str(i))
+            print("mom: " + str(mom_seq))
+            mom = Match.objects.get(tourney=tourney, sequence=mom_seq)
+            dad = Match.objects.get(tourney=tourney, sequence=(15 - (15-i)*2 + 1))
+            Match.objects.create(
+                tourney=tourney,
+                sequence=i + 1,
+                round=16,
+                mom=mom,
+                dad=dad,
+            )
 
         return tourney
 
