@@ -63,25 +63,30 @@ def current_match(request, tourney_id):
         match_number = seconds_elapsed // (tourney.match_duration * 60) + 1
 
         # update past winners
-        past_matches = Match.objects.filter(
+        past_matches_without_winners = Match.objects.filter(
             tourney=tourney
         ).filter(
-            sequence__lt=match_number
+            sequence__lt=match_number,
+            winner=None
         )
-        for m in past_matches:
-            if m.winner is None:
-                char1_vote_count = len(m.votes.filter(character=m.character1))
-                char2_vote_count = len(m.votes.filter(character=m.character2))
-                winner = m.character1 if char1_vote_count >= char2_vote_count else m.character2
-                m.winner = winner
-                m.save()
+        for m in past_matches_without_winners:
+            char1_vote_count = len(m.votes.filter(character=m.character1))
+            char2_vote_count = len(m.votes.filter(character=m.character2))
+            winner = m.character1 if char1_vote_count >= char2_vote_count else m.character2
+            m.winner = winner
+            m.save()
 
-        # update current match chars if needed
-        current_match = Match.objects.get(tourney=tourney, sequence=match_number)
-        if current_match.character1 is None:
-            current_match.character1 = current_match.mom.winner
-            current_match.character2 = current_match.dad.winner
-            current_match.save()
+        # update match chars if needed
+        matches_without_chars = Match.objects.filter(
+            tourney=tourney
+        ).filter(
+            sequence__lte=match_number,
+            character1=None
+        )
+        for m in matches_without_chars:
+            m.character1 = m.mom.winner
+            m.character2 = m.dad.winner
+            m.save()
 
         return JsonResponse("matches: " + str(match_number), safe=False)
     else:

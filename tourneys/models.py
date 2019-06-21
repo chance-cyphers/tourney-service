@@ -77,7 +77,7 @@ class Match(models.Model):
     round = models.IntegerField(default=0)
 
     def __str__(self):
-        return str(self.id) + ": " + str(self.character1) + " vs " + str(self.character2)
+        return str(self.id) + ": " + str(self.character1) + " vs " + str(self.character2) + ", winner: " + str(self.winner)
 
 
 class Vote(models.Model):
