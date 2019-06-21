@@ -56,7 +56,6 @@ def single_tourney(request, tourney_id):
 @csrf_exempt
 def current_match(request, tourney_id):
     if request.method == "GET":
-        # find tourney
         tourney = Tourney.objects.get(pk=tourney_id)
 
         # calc match seq # by tourney time
@@ -73,11 +72,11 @@ def current_match(request, tourney_id):
         # update winners if null
         for m in past_matches:
             if m.winner is None:
-                print('match: ' + str(m.sequence))
-                char1_votes = m.votes.filter(character=m.character1)
-                char2_votes = m.votes.filter(character=m.character2)
-                print(len(char1_votes))
-                print(len(char2_votes))
+                char1_vote_count = len(m.votes.filter(character=m.character1))
+                char2_vote_count = len(m.votes.filter(character=m.character2))
+                winner = m.character1 if char1_vote_count >= char2_vote_count else m.character2
+                m.winner = winner
+                m.save()
 
         # update current match chars if needed
 
@@ -89,7 +88,6 @@ def current_match(request, tourney_id):
 @csrf_exempt
 def vote(request, match_id, character_id, username):
     if request.method == "PUT":
-        # data = JSONParser().parse(io.BytesIO(request.body))
         match = Match.objects.get(pk=match_id)
         character = Character.objects.get(pk=character_id)
         v = Vote.objects.update_or_create(username=username, match=match, defaults={"character": character})
