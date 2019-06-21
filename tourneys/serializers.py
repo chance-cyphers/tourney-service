@@ -38,7 +38,7 @@ class TourneySerializer(serializers.Serializer):
 
     def create(self, validated_data):
         character_data = validated_data.pop('characters')
-        tourney = Tourney.objects.create(**validated_data)
+        tourney = Tourney.objects.create(match_duration=1, **validated_data)
 
         for c in character_data:
             Character.objects.create(tourney=tourney, **c)
