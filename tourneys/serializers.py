@@ -31,6 +31,12 @@ class CharacterSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=200)
 
 
+class MatchSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    character1 = CharacterSerializer()
+    character2 = CharacterSerializer()
+
+
 class TourneySerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     title = serializers.CharField(max_length=200)
