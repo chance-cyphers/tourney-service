@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
 from tourneys.models import Bracket, Tourney, Match, Vote, Character
-from tourneys.serializers import BracketSerializer, TourneySerializer, MatchSerializer, to_tourneys_rep, to_tourney_rep
+from tourneys.serializers import BracketSerializer, TourneySerializer, MatchSerializer, to_tourneys_rep, to_tourney_rep, to_match_rep
 
 
 @csrf_exempt
@@ -98,8 +98,7 @@ def current_match(request, tourney_id):
 
         if Match.objects.filter(tourney=tourney, sequence=match_number).exists():
             current_match = Match.objects.get(tourney=tourney, sequence=match_number)
-            serializer = MatchSerializer(current_match)
-            return JsonResponse(serializer.data, safe=False)
+            return JsonResponse(to_match_rep(current_match), safe=False)
         else:
             return HttpResponse(status=404)
 

@@ -107,3 +107,16 @@ def to_tourney_rep(tourney):
             "currentMatch": f"{BASE_URL}/tourney/tourney/{tourney.id}/current-match"
         }
     }
+
+
+def to_match_rep(match):
+    return {
+        "character1": {
+            "name": match.character1.name,
+            "voteLink": f"{BASE_URL}/tourney/match/{match.id}/character/{match.character1.id}/vote"
+        },
+        "character2": {
+            "name": match.character2.name,
+            "voteLink": f"{BASE_URL}/tourney/match/{match.id}/character/{match.character2.id}/vote"
+        }
+    }
