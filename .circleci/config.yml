@@ -4,8 +4,11 @@ jobs:
     docker:
     - image: circleci/python:3.6.4
 
+    working_directory: ~/repo
+
     steps:
     - checkout
 
     - run:
+        name: check
         command: python manage.py check
