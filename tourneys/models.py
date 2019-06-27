@@ -13,7 +13,7 @@ class Bracket:
             {"name": "Captain Sonar"},
             {"name": "One Night Ultimate Werewolf"},
             {"name": "Code Names"},
-            {"name": "Sherrif of Nottingham"},
+            {"name": "Sheriff of Nottingham"},
             {"name": "Dead of Winter"},
             {"name": "Coup"},
             {"name": "7 Wonders"},
