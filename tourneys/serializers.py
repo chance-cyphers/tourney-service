@@ -114,3 +114,27 @@ def to_match_rep(match):
             "voteLink": f"{BASE_URL}/tourney/match/{match.id}/character/{match.character2.id}/vote"
         }
     }
+
+
+def to_bracket_rep(tourney):
+    r16_matches = Match.objects.filter(tourney=tourney).filter(sequence__lte=8)
+
+    characters = []
+    for m in r16_matches:
+        match_chars = match_to_chars(m)
+        characters.append(match_chars[0])
+        characters.append(match_chars[1])
+
+    return {
+        "name": tourney.title,
+        "roundOf16": characters
+    }
+
+
+def match_to_chars(match):
+    print(str(match))
+    return {
+        "name": match.character1.name
+    }, {
+        "name": match.character2.name
+    }

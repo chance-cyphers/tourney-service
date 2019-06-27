@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
 from tourneys.models import Bracket, Tourney, Match, Vote, Character
-from tourneys.serializers import BracketSerializer, TourneySerializer, to_tourneys_rep, to_tourney_rep, to_match_rep
+from tourneys.serializers import BracketSerializer, TourneySerializer, to_tourneys_rep, to_tourney_rep, to_match_rep, to_bracket_rep
 
 
 @csrf_exempt
@@ -25,6 +25,14 @@ def index(request):
         "allTourneysLink": "https://tourney-service.herokuapp.com/tourney/v2/tourney"
     }
     return JsonResponse({"links": links, "greeting": "sup"}, safe=False)
+
+
+@csrf_exempt
+def bracket(request, tourney_id):
+    if request.method == "GET":
+        return JsonResponse(to_bracket_rep(Tourney.objects.get(pk=tourney_id)), safe=False)
+    else:
+        return HttpResponseNotAllowed("GET")
 
 
 @csrf_exempt
