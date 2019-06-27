@@ -108,8 +108,12 @@ def current_match(request, tourney_id):
 
 
 @csrf_exempt
-def vote(request, match_id, character_id, username):
+def vote(request, match_id, character_id):
     if request.method == "PUT":
+        username = request.GET.get('username')
+        if username is None:
+            return HttpResponse(status=404)
+
         match = Match.objects.get(pk=match_id)
         character = Character.objects.get(pk=character_id)
         v = Vote.objects.update_or_create(username=username, match=match, defaults={"character": character})
