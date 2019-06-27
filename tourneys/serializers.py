@@ -4,6 +4,9 @@ from rest_framework import serializers
 from tourneys.models import Bracket, Tourney, Character, Match
 
 
+BASE_URL = "https://tourney-service.herokuapp.com"
+
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -77,3 +80,29 @@ class TourneySerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         pass
+
+
+def to_tourneys_rep(tourneys):
+    response = []
+    for tourney in tourneys:
+        response.append(single_tourney_rep(tourney))
+
+    return response
+
+
+def single_tourney_rep(tourney):
+    characters = []
+    for c in tourney.characters.all():
+        characters.append({
+            "id": c.id,
+            "name": c.name,
+        })
+    return {
+        "id": tourney.id,
+        "title": tourney.title,
+        "match_duration": tourney.match_duration,
+        "characters": characters,
+        "links": {
+            "self": f"{BASE_URL}/tourney/tourney/{tourney.id}"
+        }
+    }
