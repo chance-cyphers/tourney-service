@@ -11,7 +11,7 @@ jobs:
     steps:
     - checkout
 
-    - restore_cache:  # ensure this step occurs *before* installing dependencies
+    - restore_cache:
         key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
     - run:
@@ -29,4 +29,4 @@ jobs:
 
     - run:
         name: check
-        command: pipenv run python manage.py check
+        command: pipenv run python manage.py test
