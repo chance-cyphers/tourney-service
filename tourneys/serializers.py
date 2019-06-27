@@ -85,12 +85,12 @@ class TourneySerializer(serializers.Serializer):
 def to_tourneys_rep(tourneys):
     response = []
     for tourney in tourneys:
-        response.append(single_tourney_rep(tourney))
+        response.append(to_tourney_rep(tourney))
 
     return response
 
 
-def single_tourney_rep(tourney):
+def to_tourney_rep(tourney):
     characters = []
     for c in tourney.characters.all():
         characters.append({
@@ -103,6 +103,7 @@ def single_tourney_rep(tourney):
         "match_duration": tourney.match_duration,
         "characters": characters,
         "links": {
-            "self": f"{BASE_URL}/tourney/tourney/{tourney.id}"
+            "self": f"{BASE_URL}/tourney/tourney/{tourney.id}",
+            "currentMatch": f"{BASE_URL}/tourney/tourney/{tourney.id}/current-match"
         }
     }

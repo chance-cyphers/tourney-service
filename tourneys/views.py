@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
 from tourneys.models import Bracket, Tourney, Match, Vote, Character
-from tourneys.serializers import BracketSerializer, TourneySerializer, MatchSerializer, to_tourneys_rep
+from tourneys.serializers import BracketSerializer, TourneySerializer, MatchSerializer, to_tourneys_rep, to_tourney_rep
 
 
 @csrf_exempt
@@ -54,8 +54,7 @@ def tourneys_v2(request):
 def single_tourney(request, tourney_id):
     if request.method == "GET":
         try:
-            serializer = TourneySerializer(Tourney.objects.get(pk=tourney_id))
-            return JsonResponse(serializer.data, safe=False)
+            return JsonResponse(to_tourney_rep(Tourney.objects.get(pk=tourney_id)), safe=False)
         except Tourney.DoesNotExist:
             raise Http404("Tourney does not exist")
     else:
