@@ -3,7 +3,6 @@ from rest_framework import serializers
 
 from tourneys.models import Bracket, Tourney, Character, Match
 
-
 BASE_URL = "https://tourney-service.herokuapp.com"
 
 
@@ -118,22 +117,43 @@ def to_match_rep(match):
 
 
 def to_bracket_rep(tourney):
-    r16_matches = Match.objects.filter(tourney=tourney).filter(sequence__lte=8)
+    r16_characters = [
+        {"name": c.name}
+        for match in Match.objects.filter(tourney=tourney).filter(sequence__lte=8)
+        for c in [match.character1, match.character2]
+    ]
 
-    characters = [{"name": c.name}
-                  for match in r16_matches
-                  for c in [match.character1, match.character2]]
+    r8_characters = [
+        {"name": c.name}
+        for match in Match.objects.filter(tourney=tourney).filter(sequence__gt=8, sequence__lte=12).exclude(character1=None)
+        for c in [match.character1, match.character2]
+    ]
+
+    semifinals_characters = [
+        {"name": c.name}
+        for match in Match.objects.filter(tourney=tourney).filter(sequence__gt=12, sequence__lte=14).exclude(character1=None)
+        for c in [match.character1, match.character2]
+    ]
+
+    finals_characters = [
+        {"name": c.name}
+        for match in Match.objects.filter(tourney=tourney, sequence=15).exclude(character1=None)
+        for c in [match.character1, match.character2]
+    ]
 
     return {
         "name": tourney.title,
-        "roundOf16": characters
+        "roundOf16": r16_characters,
+        "roundOf8": r8_characters,
+        "semifinals": semifinals_characters,
+        "finals": finals_characters
     }
 
 
 def match_to_chars(match):
     print(str(match))
     return {
-        "name": match.character1.name
-    }, {
-        "name": match.character2.name
-    }
+               "name": match.character1.name
+           }, {
+               "name": match.character2.name
+           }
