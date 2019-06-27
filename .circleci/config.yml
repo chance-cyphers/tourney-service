@@ -24,4 +24,4 @@ jobs:
 
     - run:
         name: check
-        command: python manage.py check
+        command: python3 manage.py check
