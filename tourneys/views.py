@@ -9,7 +9,7 @@ from rest_framework.parsers import JSONParser
 
 from tourneys.models import Bracket, Tourney, Match, Vote, Character
 from tourneys.serializers import BracketSerializer, TourneySerializer, MatchSerializer, to_tourneys_rep
-
+asd
 
 @csrf_exempt
 def example_bracket(request):
