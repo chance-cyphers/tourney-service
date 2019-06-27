@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
 from tourneys.models import Bracket, Tourney, Match, Vote, Character
-from tourneys.serializers import BracketSerializer, TourneySerializer, MatchSerializer, to_tourneys_rep, to_tourney_rep, to_match_rep
+from tourneys.serializers import BracketSerializer, TourneySerializer, to_tourneys_rep, to_tourney_rep, to_match_rep
 
 
 @csrf_exempt
