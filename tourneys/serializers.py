@@ -98,7 +98,8 @@ def to_tourney_rep(tourney):
         "characters": characters,
         "links": {
             "self": f"{BASE_URL}/tourney/tourney/{tourney.id}",
-            "currentMatch": f"{BASE_URL}/tourney/tourney/{tourney.id}/current-match"
+            "currentMatch": f"{BASE_URL}/tourney/tourney/{tourney.id}/current-match",
+            "bracket": f"{BASE_URL}/tourney/tourney/{tourney.id}/bracket"
         }
     }
 
