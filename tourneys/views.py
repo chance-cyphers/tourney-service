@@ -22,7 +22,7 @@ def example_bracket(request):
 def index(request):
     links = {
         "currentBracketLink": "https://tourney-service.herokuapp.com/tourney/bracket/example",
-        "allTourneysLink": "https://tourney-service.herokuapp.com/tourney/tourney"
+        "allTourneysLink": "https://tourney-service.herokuapp.com/tourney/v2/tourney"
     }
     return JsonResponse({"links": links, "greeting": "sup"}, safe=False)
 
