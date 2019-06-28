@@ -8,7 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
 from tourneys.models import Bracket, Tourney, Match, Vote, Character
-from tourneys.serializers import BracketSerializer, TourneySerializer, to_tourneys_rep, to_tourney_rep, to_match_rep, to_bracket_rep
+from tourneys.serializers import BracketSerializer, TourneySerializer, to_tourneys_rep, to_tourney_rep, to_match_rep, \
+    to_bracket_rep
 
 
 @csrf_exempt
@@ -30,7 +31,9 @@ def index(request):
 @csrf_exempt
 def bracket(request, tourney_id):
     if request.method == "GET":
-        return JsonResponse(to_bracket_rep(Tourney.objects.get(pk=tourney_id)), safe=False)
+        tourney = Tourney.objects.get(pk=tourney_id)
+        update_tourney(tourney)
+        return JsonResponse(to_bracket_rep(tourney), safe=False)
     else:
         return HttpResponseNotAllowed("GET")
 
@@ -74,35 +77,7 @@ def current_match(request, tourney_id):
     if request.method == "GET":
         tourney = Tourney.objects.get(pk=tourney_id)
 
-        # calc match seq # by tourney time
-        seconds_elapsed = (datetime.now(timezone.utc) - tourney.start_time).total_seconds()
-        match_number = seconds_elapsed // (tourney.match_duration * 60) + 1
-
-        # update past winners
-        past_matches_without_winners = Match.objects.filter(
-            tourney=tourney
-        ).filter(
-            sequence__lt=match_number,
-            winner=None
-        )
-        for m in past_matches_without_winners:
-            char1_vote_count = len(m.votes.filter(character=m.character1))
-            char2_vote_count = len(m.votes.filter(character=m.character2))
-            winner = m.character1 if char1_vote_count >= char2_vote_count else m.character2
-            m.winner = winner
-            m.save()
-
-        # update match chars if needed
-        matches_without_chars = Match.objects.filter(
-            tourney=tourney
-        ).filter(
-            sequence__lte=match_number,
-            character1=None
-        )
-        for m in matches_without_chars:
-            m.character1 = m.mom.winner
-            m.character2 = m.dad.winner
-            m.save()
+        match_number = get_current_match_num(tourney)
 
         if Match.objects.filter(tourney=tourney, sequence=match_number).exists():
             current_match = Match.objects.get(tourney=tourney, sequence=match_number)
@@ -112,6 +87,41 @@ def current_match(request, tourney_id):
 
     else:
         return HttpResponseNotAllowed("GET")
+
+
+def update_tourney(tourney):
+    match_number = get_current_match_num(tourney)
+
+    # update past winners
+    past_matches_without_winners = Match.objects.filter(
+        tourney=tourney
+    ).filter(
+        sequence__lt=match_number,
+        winner=None
+    )
+    for m in past_matches_without_winners:
+        char1_vote_count = len(m.votes.filter(character=m.character1))
+        char2_vote_count = len(m.votes.filter(character=m.character2))
+        winner = m.character1 if char1_vote_count >= char2_vote_count else m.character2
+        m.winner = winner
+        m.save()
+
+    # update match chars if needed
+    matches_without_chars = Match.objects.filter(
+        tourney=tourney
+    ).filter(
+        sequence__lte=match_number,
+        character1=None
+    )
+    for m in matches_without_chars:
+        m.character1 = m.mom.winner
+        m.character2 = m.dad.winner
+        m.save()
+
+
+def get_current_match_num(tourney):
+    seconds_elapsed = (datetime.now(timezone.utc) - tourney.start_time).total_seconds()
+    return seconds_elapsed // (tourney.match_duration * 60) + 1
 
 
 @csrf_exempt
