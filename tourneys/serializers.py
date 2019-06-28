@@ -152,7 +152,7 @@ def to_bracket_rep(tourney):
         "roundOf8": r8_characters,
         "semifinals": semifinals_characters,
         "finals": finals_characters,
-        "winner": {"name": final_match.winner.name}
+        "winner": None if final_match.winner is None else {"name": final_match.winner.name}
     }
 
 
