@@ -10,7 +10,7 @@ jobs:
       only:
         - master
 
-    working_directory: ~/repo
+#    working_directory: ~/repo
 
     steps:
     - checkout
