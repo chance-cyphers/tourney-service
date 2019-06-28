@@ -154,12 +154,3 @@ def to_bracket_rep(tourney):
         "finals": finals_characters,
         "winner": None if final_match.winner is None else {"name": final_match.winner.name}
     }
-
-
-def match_to_chars(match):
-    print(str(match))
-    return {
-               "name": match.character1.name
-           }, {
-               "name": match.character2.name
-           }

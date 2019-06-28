@@ -76,6 +76,7 @@ def single_tourney(request, tourney_id):
 def current_match(request, tourney_id):
     if request.method == "GET":
         tourney = Tourney.objects.get(pk=tourney_id)
+        update_tourney(tourney)
 
         match_number = get_current_match_num(tourney)
 
