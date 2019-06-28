@@ -131,18 +131,18 @@ def to_bracket_rep(tourney):
         if m.character2 is not None:
             r8_characters.append({"name": m.character2.name})
 
-    semifinals_matches = Match.objects.filter(tourney=tourney) \
-        .filter(sequence__gt=12, sequence__lte=14) \
-        .exclude(character1=None).order_by("sequence")
+    semifinals_matches = Match.objects.filter(tourney=tourney).filter(sequence__gt=12, sequence__lte=14).order_by("sequence")
     semifinals_characters = []
     for m in semifinals_matches:
-        semifinals_characters.append({"name": m.character1.name})
+        if m.character1 is not None:
+            semifinals_characters.append({"name": m.character1.name})
         if m.character2 is not None:
             semifinals_characters.append({"name": m.character2.name})
 
     finals_characters = []
-    for m in Match.objects.filter(tourney=tourney, sequence=15).exclude(character1=None):
-        finals_characters.append({"name": m.character1})
+    for m in Match.objects.filter(tourney=tourney, sequence=15):
+        if m.character1 is not None:
+            finals_characters.append({"name": m.character1})
         if m.character2 is not None:
             finals_characters.append({"name": m.character2})
 
