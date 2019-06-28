@@ -119,7 +119,7 @@ def to_match_rep(match):
 def to_bracket_rep(tourney):
     r16_characters = [
         {"name": c.name}
-        for match in Match.objects.filter(tourney=tourney).filter(sequence__lte=8)
+        for match in Match.objects.filter(tourney=tourney).filter(sequence__lte=8).order_by("sequence")
         for c in [match.character1, match.character2]
     ]
 
