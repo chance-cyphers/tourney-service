@@ -123,12 +123,11 @@ def to_bracket_rep(tourney):
         for c in [match.character1, match.character2]
     ]
 
-    r8_matches = Match.objects.filter(tourney=tourney) \
-        .filter(sequence__gt=8, sequence__lte=12) \
-        .exclude(character1=None).order_by("sequence")
+    r8_matches = Match.objects.filter(tourney=tourney).filter(sequence__gt=8, sequence__lte=12).order_by("sequence")
     r8_characters = []
     for m in r8_matches:
-        r8_characters.append({"name": m.character1.name})
+        if m.character1 is not None:
+            r8_characters.append({"name": m.character1.name})
         if m.character2 is not None:
             r8_characters.append({"name": m.character2.name})
 
