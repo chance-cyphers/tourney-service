@@ -146,6 +146,8 @@ def to_bracket_rep(tourney):
     if final_match.character2 is not None:
         finals_characters.append({"name": m.character2.name})
 
+    print("winner: " + str(final_match.winner))
+
     return {
         "name": tourney.title,
         "roundOf16": r16_characters,
