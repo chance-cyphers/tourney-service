@@ -110,7 +110,7 @@ def update_tourney(tourney):
     matches_without_chars = Match.objects.filter(
         tourney=tourney
     ).filter(
-        sequence__lte=match_number,
+        # sequence__lte=match_number,
         character1=None
     )
     for m in matches_without_chars:
