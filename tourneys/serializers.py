@@ -142,9 +142,9 @@ def to_bracket_rep(tourney):
     finals_characters = []
     for m in Match.objects.filter(tourney=tourney, sequence=15):
         if m.character1 is not None:
-            finals_characters.append({"name": m.character1})
+            finals_characters.append({"name": m.character1.name})
         if m.character2 is not None:
-            finals_characters.append({"name": m.character2})
+            finals_characters.append({"name": m.character2.name})
 
     return {
         "name": tourney.title,
