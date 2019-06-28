@@ -106,17 +106,13 @@ def update_tourney(tourney):
         m.winner = winner
         m.save()
 
-    # update match chars if needed
-    matches_without_chars = Match.objects.filter(
-        tourney=tourney
-    ).filter(
-        # sequence__lte=match_number,
-        character1=None
-    )
-    for m in matches_without_chars:
-        m.character1 = m.mom.winner
-        m.character2 = m.dad.winner
-        m.save()
+    # update match chars
+    matches = Match.objects.filter(tourney=tourney)
+    for m in matches:
+        if m.character1 is None or m.character2 is None:
+            m.character1 = m.mom.winner
+            m.character2 = m.dad.winner
+            m.save()
 
 
 def get_current_match_num(tourney):
