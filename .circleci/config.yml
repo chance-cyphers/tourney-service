@@ -15,6 +15,10 @@ jobs:
     steps:
     - checkout
 
+    - run:
+        command: ls /home/circleci/project/
+
+
     - restore_cache:
         key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
