@@ -10,8 +10,6 @@ jobs:
       only:
         - master
 
-#    working_directory: ~/repo
-
     steps:
     - checkout
     - run: sudo chown -R circleci:circleci /usr/local/bin
