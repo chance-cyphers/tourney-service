@@ -2,53 +2,6 @@ from django.db import models
 from datetime import datetime
 
 
-class Bracket:
-    managed = False
-
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
-        self.roundOf16 = [
-            {"name": "Pandemic"},
-            {"name": "Captain Sonar"},
-            {"name": "One Night Ultimate Werewolf"},
-            {"name": "Code Names"},
-            {"name": "Sheriff of Nottingham"},
-            {"name": "Dead of Winter"},
-            {"name": "Coup"},
-            {"name": "7 Wonders"},
-            {"name": "Ticket to Ride"},
-            {"name": "Munchkin"},
-            {"name": "Betrayal at House on the Hill"},
-            {"name": "King of Tokyo"},
-            {"name": "Photosynthesis"},
-            {"name": "Settlers of Catan"},
-            {"name": "Clank!"},
-            {"name": "Dominion"},
-        ]
-        self.roundOf8 = [
-            {"name": "Pandemic"},
-            {"name": "Code Names"},
-            {"name": "Dead of Winter"},
-            {"name": "Coup"},
-            {"name": "Munchkin"},
-            {"name": "Betrayal at House on the Hill"},
-            {"name": "Photosynthesis"},
-            {"name": "Dominion"},
-        ]
-        self.semiFinals = [
-            {"name": "Pandemic"},
-            {"name": "Coup"},
-            {"name": "Betrayal at House on the Hill"},
-            {"name": "Dominion"},
-        ]
-        self.finals = [
-            {"name": "Pandemic"},
-            {"name": "Dominion"},
-        ]
-        self.winner = {"name": "Pandemic"}
-
-
 class Tourney(models.Model):
     title = models.CharField(max_length=200)
     match_duration = models.IntegerField(default=15)
@@ -77,7 +30,8 @@ class Match(models.Model):
     round = models.IntegerField(default=0)
 
     def __str__(self):
-        return str(self.id) + ": " + str(self.character1) + " vs " + str(self.character2) + ", winner: " + str(self.winner)
+        return str(self.id) + ": " + str(self.character1) + " vs " + str(self.character2) + ", winner: " + str(
+            self.winner)
 
 
 class Vote(models.Model):
