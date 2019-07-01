@@ -33,8 +33,13 @@ def bracket(request, tourney_id):
 @csrf_exempt
 def tourneys(request):
     if request.method == "GET":
-        serializer = TourneySerializer(Tourney.objects.all(), many=True)
-        return JsonResponse(serializer.data, safe=False)
+        code = request.GET.get('code')
+        if code is None:
+            serializer = TourneySerializer(Tourney.objects.all(), many=True)
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            tourney = Tourney.objects.get(code=code)
+            return JsonResponse(to_tourney_rep(tourney), safe=False)
     if request.method == "POST":
         data = JSONParser().parse(io.BytesIO(request.body))
         serializer = TourneySerializer(data=data)
