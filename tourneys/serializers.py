@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from tourneys.models import Tourney, Character, Match
+import string
+import random
 
 BASE_URL = "https://tourney-service.herokuapp.com"
 
@@ -22,11 +24,16 @@ class TourneySerializer(serializers.Serializer):
     title = serializers.CharField(max_length=200)
     match_duration = serializers.IntegerField()
     characters = CharacterSerializer(many=True)
+    code = serializers.CharField(max_length=10, read_only=True)
 
     def create(self, validated_data):
         character_data = validated_data.pop('characters')
         match_duration = int(validated_data.pop('match_duration'))
-        tourney = Tourney.objects.create(match_duration=match_duration, **validated_data)
+        tourney = Tourney.objects.create(
+            match_duration=match_duration,
+            code=generate_tourney_code(),
+            **validated_data
+        )
 
         for c in character_data:
             Character.objects.create(tourney=tourney, **c)
@@ -59,6 +66,11 @@ class TourneySerializer(serializers.Serializer):
         pass
 
 
+def generate_tourney_code():
+    letters = string.ascii_uppercase
+    return ''.join(random.choice(letters) for _ in range(4))
+
+
 def to_tourneys_rep(tourneys):
     response = []
     for tourney in tourneys:
@@ -79,6 +91,7 @@ def to_tourney_rep(tourney):
         "title": tourney.title,
         "match_duration": tourney.match_duration,
         "characters": characters,
+        "code": tourney.code,
         "links": {
             "self": f"{BASE_URL}/tourney/tourney/{tourney.id}",
             "currentMatch": f"{BASE_URL}/tourney/tourney/{tourney.id}/current-match",
@@ -115,7 +128,8 @@ def to_bracket_rep(tourney):
         if m.character2 is not None:
             r8_characters.append({"name": m.character2.name})
 
-    semifinals_matches = Match.objects.filter(tourney=tourney).filter(sequence__gt=12, sequence__lte=14).order_by("sequence")
+    semifinals_matches = Match.objects.filter(tourney=tourney).filter(sequence__gt=12, sequence__lte=14).order_by(
+        "sequence")
     semifinals_characters = []
     for m in semifinals_matches:
         if m.character1 is not None:

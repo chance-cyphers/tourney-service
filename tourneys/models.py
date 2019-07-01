@@ -6,6 +6,7 @@ class Tourney(models.Model):
     title = models.CharField(max_length=200)
     match_duration = models.IntegerField(default=15)
     start_time = models.DateTimeField(default=datetime.now)
+    code = models.CharField(max_length=10, default="")
 
     def __str__(self):
         return str(self.id) + ": " + str(self.title)
