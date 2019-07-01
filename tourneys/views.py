@@ -91,8 +91,10 @@ def current_match(request, tourney_id):
 def current_match_v2(request):
     if request.method == "GET":
         code = request.GET.get('code')
-        tourney = Tourney.objects.get(code=code)
+        if not Tourney.objects.filter(code=code).exists():
+            return HttpResponse(status=404)
 
+        tourney = Tourney.objects.get(code=code)
         update_tourney(tourney)
 
         match_number = get_current_match_num(tourney)
