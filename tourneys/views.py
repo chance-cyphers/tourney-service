@@ -87,6 +87,26 @@ def current_match(request, tourney_id):
         return HttpResponseNotAllowed("GET")
 
 
+@csrf_exempt
+def current_match_v2(request):
+    if request.method == "GET":
+        code = request.GET.get('code')
+        tourney = Tourney.objects.get(code=code)
+
+        update_tourney(tourney)
+
+        match_number = get_current_match_num(tourney)
+
+        if Match.objects.filter(tourney=tourney, sequence=match_number).exists():
+            current_match = Match.objects.get(tourney=tourney, sequence=match_number)
+            return JsonResponse(to_match_rep(current_match), safe=False)
+        else:
+            return HttpResponse(status=404)
+
+    else:
+        return HttpResponseNotAllowed("GET")
+
+
 def update_tourney(tourney):
     match_number = get_current_match_num(tourney)
 
