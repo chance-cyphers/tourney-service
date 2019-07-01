@@ -146,6 +146,7 @@ def to_bracket_rep(tourney):
 
     return {
         "name": tourney.title,
+        "code": tourney.code,
         "roundOf16": r16_characters,
         "roundOf8": r8_characters,
         "semifinals": semifinals_characters,
